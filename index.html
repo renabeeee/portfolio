@@ -30,9 +30,16 @@
     .delay-3 { animation-delay: 0.3s; opacity: 0; }
     .delay-4 { animation-delay: 0.4s; opacity: 0; }
 
+    @media (pointer: coarse) {
       body {
-            cursor: none;
-        }
+        cursor: auto;
+      }
+      
+      .cursor,
+      .cursor-follower {
+        display: none;
+      }
+    }
 
         .cursor {
             position: fixed;
