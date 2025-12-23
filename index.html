@@ -139,7 +139,7 @@ body > * {
   </div>
 
   <!-- HERO -->
-  <section class="min-h-screen flex flex-col md:flex-row items-center justify-center gap-12 px-8 md:px-16 pt-20 md:pt-0">
+  <section id="hero" class="min-h-screen flex flex-col md:flex-row items-center justify-center gap-12 px-8 md:px-16 pt-20 md:pt-0">
     
     <!-- Left: Text -->
     <div class="flex-1 max-w-lg fade-in">
@@ -622,98 +622,123 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
     
     let businessMode = false;
     
+    // Store original display values for all portfolio sections
+    const portfolioSections = [
+        'section.hero, section#about, section#work, section#contact'
+    ].join(', ');
+    
     businessToggle.addEventListener('click', () => {
-      businessMode = !businessMode;
-      
-      if (businessMode) {
-        // Switch to Business Mode
-        toggleSlider.style.transform = 'translateX(24px)';
-        businessToggle.style.backgroundColor = '#2563eb';
+        businessMode = !businessMode;
         
-        // Hide portfolio content (except navbar)
-       document.querySelectorAll('body > *:not(nav):not(#business-content):not(.cursor):not(.cursor-follower)').forEach(el => {
-      el.dataset.originalDisplay = window.getComputedStyle(el).display;
-      el.style.display = 'none';
-    });
-        
-        // Show business content
-        businessContent.style.display = 'block';
-        
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Update URL for bookmarking
-        history.pushState({ businessMode: true }, '', '#business');
-        
-      } else {
-        // Switch to Portfolio Mode
-        toggleSlider.style.transform = 'translateX(0)';
-        businessToggle.style.backgroundColor = '#d1d5db';
-        
-        // Hide business content
-        businessContent.style.display = 'none';
-        
-        // Show portfolio content
-         document.querySelectorAll('body > *:not(nav):not(#business-content):not(.cursor):not(.cursor-follower)').forEach(el => {
-      if (el.dataset.originalDisplay) {
-        // Restore the original display value (including 'none' for hidden elements)
-        el.style.display = el.dataset.originalDisplay;
-      } else {
-        // If no original value stored, use default 'block' or 'flex' based on element type
-        const tag = el.tagName.toLowerCase();
-        if (tag === 'section' || tag === 'div') {
-          el.style.display = 'block';
+        if (businessMode) {
+            // Switch to Business Mode
+            toggleSlider.style.transform = 'translateX(24px)';
+            businessToggle.style.backgroundColor = '#2563eb';
+            
+            // Hide all portfolio sections
+            document.querySelectorAll('section:not(#business-hero):not(#business-services):not(#business-contact)').forEach(el => {
+                if (!el.closest('#business-content')) { // Don't hide business sections
+                    el.style.display = 'none';
+                }
+            });
+            
+            // Show business content - remove Tailwind's hidden class first
+            businessContent.classList.remove('hidden');
+            businessContent.style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Update URL for bookmarking
+            history.pushState({ businessMode: true }, '', '#business');
+            
         } else {
-          el.style.display = 'block';
+            // Switch to Portfolio Mode
+            toggleSlider.style.transform = 'translateX(0)';
+            businessToggle.style.backgroundColor = '#d1d5db';
+            
+            // Hide business content - add Tailwind's hidden class back
+            businessContent.classList.add('hidden');
+            businessContent.style.display = 'none';
+            
+            // Show all portfolio sections
+            document.querySelectorAll('section').forEach(el => {
+                if (!el.closest('#business-content')) { // Don't show business sections
+                    el.style.display = 'block';
+                }
+            });
+            
+            // Update URL
+            history.pushState({ businessMode: false }, '', '#');
         }
-      }
+        
+        // Ensure mobile menu is hidden when toggling
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenu) {
+            mobileMenu.classList.add('hidden');
+        }
     });
-
-    // Update URL
-    history.pushState({ businessMode: false }, '', '#');
-  }
-});
     
     // Handle browser back/forward buttons
     window.addEventListener('popstate', (event) => {
-      if (event.state && event.state.businessMode) {
-        // Force toggle to business mode
-        if (!businessMode) {
-          businessToggle.click();
+        if (event.state && event.state.businessMode) {
+            // Force toggle to business mode
+            if (!businessMode) {
+                businessToggle.click();
+            }
+        } else {
+            // Force toggle to portfolio mode
+            if (businessMode) {
+                businessToggle.click();
+            }
         }
-      } else {
-        // Force toggle to portfolio mode
-        if (businessMode) {
-          businessToggle.click();
-        }
-      }
     });
     
     // Check URL on load
     if (window.location.hash === '#business') {
-      // Wait a moment for page to load, then toggle
-      setTimeout(() => {
-        if (!businessMode) {
-          businessToggle.click();
-        }
-      }, 100);
+        // Wait a moment for page to load, then toggle
+        setTimeout(() => {
+            if (!businessMode) {
+                businessToggle.click();
+            }
+        }, 100);
     }
     
-    // Mobile menu functionality
+    // Mobile menu functionality - FIXED
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     
     if (mobileMenuBtn && mobileMenu) {
-      mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-      });
-      
-      const mobileLinks = mobileMenu.querySelectorAll('a');
-      mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          mobileMenu.classList.add('hidden');
+        mobileMenuBtn.addEventListener('click', () => {
+            // Toggle the 'hidden' class
+            mobileMenu.classList.toggle('hidden');
+            
+            // Also toggle display style to override any inline styles from our toggle
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.style.display = 'none';
+            } else {
+                mobileMenu.style.display = 'block';
+            }
         });
-      });
+        
+        // Close mobile menu when clicking links
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.style.display = 'none';
+            });
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!mobileMenu.contains(event.target) && 
+                !mobileMenuBtn.contains(event.target) && 
+                !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.style.display = 'none';
+            }
+        });
     }
     
     // Custom cursor functionality
@@ -721,29 +746,29 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
     const cursorFollower = document.querySelector('.cursor-follower');
     
     if (cursor && cursorFollower) {
-      document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX - 10 + 'px';
-        cursor.style.top = e.clientY - 10 + 'px';
-        
-        setTimeout(() => {
-          cursorFollower.style.left = e.clientX - 20 + 'px';
-          cursorFollower.style.top = e.clientY - 20 + 'px';
-        }, 100);
-      });
-      
-      // Hover effects
-      document.querySelectorAll('a, button').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-          cursor.style.transform = 'scale(1.5)';
-          cursorFollower.style.transform = 'scale(1.5)';
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX - 20 + 'px';
+                cursorFollower.style.top = e.clientY - 20 + 'px';
+            }, 100);
         });
         
-        el.addEventListener('mouseleave', () => {
-          cursor.style.transform = 'scale(1)';
-          cursorFollower.style.transform = 'scale(1)';
+        // Hover effects
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.5)';
+                cursorFollower.style.transform = 'scale(1.5)';
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursorFollower.style.transform = 'scale(1)';
+            });
         });
-      });
     }
-  </script>
-</body>
+</script>
+   </body>
 </html>
