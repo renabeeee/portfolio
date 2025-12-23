@@ -631,9 +631,10 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
         businessToggle.style.backgroundColor = '#2563eb';
         
         // Hide portfolio content (except navbar)
-        document.querySelectorAll('body > *:not(nav):not(#business-content):not(.cursor):not(.cursor-follower)').forEach(el => {
-          el.style.display = 'none';
-        });
+       document.querySelectorAll('body > *:not(nav):not(#business-content):not(.cursor):not(.cursor-follower)').forEach(el => {
+      el.dataset.originalDisplay = window.getComputedStyle(el).display;
+      el.style.display = 'none';
+    });
         
         // Show business content
         businessContent.style.display = 'block';
@@ -653,14 +654,25 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
         businessContent.style.display = 'none';
         
         // Show portfolio content
-        document.querySelectorAll('body > *:not(nav):not(#business-content):not(.cursor):not(.cursor-follower)').forEach(el => {
+         document.querySelectorAll('body > *:not(nav):not(#business-content):not(.cursor):not(.cursor-follower)').forEach(el => {
+      if (el.dataset.originalDisplay) {
+        // Restore the original display value (including 'none' for hidden elements)
+        el.style.display = el.dataset.originalDisplay;
+      } else {
+        // If no original value stored, use default 'block' or 'flex' based on element type
+        const tag = el.tagName.toLowerCase();
+        if (tag === 'section' || tag === 'div') {
           el.style.display = 'block';
-        });
-        
-        // Update URL
-        history.pushState({ businessMode: false }, '', '#');
+        } else {
+          el.style.display = 'block';
+        }
       }
     });
+
+    // Update URL
+    history.pushState({ businessMode: false }, '', '#');
+  }
+});
     
     // Handle browser back/forward buttons
     window.addEventListener('popstate', (event) => {
