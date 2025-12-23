@@ -614,122 +614,124 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
   </section>
 </div>
 
-  <script>
+    <script>
     // Toggle Business Mode
-const businessToggle = document.getElementById('business-toggle');
-const toggleSlider = document.getElementById('toggle-slider');
-const businessContent = document.getElementById('business-content');
-const portfolioContent = document.querySelector('body > *:not(nav):not(#business-content)');
-
-let businessMode = false;
-
-businessToggle.addEventListener('click', () => {
-  businessMode = !businessMode;
-  
-  if (businessMode) {
-    // Switch to Business Mode
-    toggleSlider.style.transform = 'translateX(24px)';
-    businessToggle.style.backgroundColor = '#2563eb';
+    const businessToggle = document.getElementById('business-toggle');
+    const toggleSlider = document.getElementById('toggle-slider');
+    const businessContent = document.getElementById('business-content');
     
-    // Hide portfolio content (except navbar)
-    document.querySelectorAll('body > *:not(nav):not(#business-content):not(.cursor):not(.cursor-follower)').forEach(el => {
-      el.style.display = 'none';
+    let businessMode = false;
+    
+    businessToggle.addEventListener('click', () => {
+      businessMode = !businessMode;
+      
+      if (businessMode) {
+        // Switch to Business Mode
+        toggleSlider.style.transform = 'translateX(24px)';
+        businessToggle.style.backgroundColor = '#2563eb';
+        
+        // Hide portfolio content (except navbar)
+        document.querySelectorAll('body > *:not(nav):not(#business-content):not(.cursor):not(.cursor-follower)').forEach(el => {
+          el.style.display = 'none';
+        });
+        
+        // Show business content
+        businessContent.style.display = 'block';
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Update URL for bookmarking
+        history.pushState({ businessMode: true }, '', '#business');
+        
+      } else {
+        // Switch to Portfolio Mode
+        toggleSlider.style.transform = 'translateX(0)';
+        businessToggle.style.backgroundColor = '#d1d5db';
+        
+        // Hide business content
+        businessContent.style.display = 'none';
+        
+        // Show portfolio content
+        document.querySelectorAll('body > *:not(nav):not(#business-content):not(.cursor):not(.cursor-follower)').forEach(el => {
+          el.style.display = 'block';
+        });
+        
+        // Update URL
+        history.pushState({ businessMode: false }, '', '#');
+      }
     });
     
-    // Show business content
-    businessContent.style.display = 'block';
-    
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Update URL for bookmarking
-    history.pushState({ businessMode: true }, '', '#business');
-    
-  } else {
-    // Switch to Portfolio Mode
-    toggleSlider.style.transform = 'translateX(0)';
-    businessToggle.style.backgroundColor = '#d1d5db';
-    
-    // Hide business content
-    businessContent.style.display = 'none';
-    
-    // Show portfolio content
-    document.querySelectorAll('body > *:not(nav):not(#business-content):not(.cursor):not(.cursor-follower)').forEach(el => {
-      el.style.display = 'block';
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', (event) => {
+      if (event.state && event.state.businessMode) {
+        // Force toggle to business mode
+        if (!businessMode) {
+          businessToggle.click();
+        }
+      } else {
+        // Force toggle to portfolio mode
+        if (businessMode) {
+          businessToggle.click();
+        }
+      }
     });
     
-    // Update URL
-    history.pushState({ businessMode: false }, '', '#');
-  }
-});
-
-// Handle browser back/forward buttons
-window.addEventListener('popstate', (event) => {
-  if (event.state && event.state.businessMode) {
-    // Force toggle to business mode
-    if (!businessMode) {
-      businessToggle.click();
+    // Check URL on load
+    if (window.location.hash === '#business') {
+      // Wait a moment for page to load, then toggle
+      setTimeout(() => {
+        if (!businessMode) {
+          businessToggle.click();
+        }
+      }, 100);
     }
-  } else {
-    // Force toggle to portfolio mode
-    if (businessMode) {
-      businessToggle.click();
-    }
-  }
-});
-
-// Check URL on load
-if (window.location.hash === '#business') {
-  // Wait a moment for page to load, then toggle
-  setTimeout(() => {
-    if (!businessMode) {
-      businessToggle.click();
-    }
-  }, 100);
-}
-
-
+    
+    // Mobile menu functionality
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     
-    mobileMenuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-
-       const cursor = document.querySelector('.cursor');
-        const cursorFollower = document.querySelector('.cursor-follower');
-
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX - 10 + 'px';
-            cursor.style.top = e.clientY - 10 + 'px';
-            
-            setTimeout(() => {
-                cursorFollower.style.left = e.clientX - 20 + 'px';
-                cursorFollower.style.top = e.clientY - 20 + 'px';
-            }, 100);
-        });
-
-        // Hover effects
-        document.querySelectorAll('a, .btn').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'scale(1.5)';
-                cursorFollower.style.transform = 'scale(1.5)';
-            });
-            
-            el.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'scale(1)';
-                cursorFollower.style.transform = 'scale(1)';
-            });
-        });
-
-    const mobileLinks = mobileMenu.querySelectorAll('a');
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
       });
-    });
+      
+      const mobileLinks = mobileMenu.querySelectorAll('a');
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+        });
+      });
+    }
+    
+    // Custom cursor functionality
+    const cursor = document.querySelector('.cursor');
+    const cursorFollower = document.querySelector('.cursor-follower');
+    
+    if (cursor && cursorFollower) {
+      document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX - 10 + 'px';
+        cursor.style.top = e.clientY - 10 + 'px';
+        
+        setTimeout(() => {
+          cursorFollower.style.left = e.clientX - 20 + 'px';
+          cursorFollower.style.top = e.clientY - 20 + 'px';
+        }, 100);
+      });
+      
+      // Hover effects
+      document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursor.style.transform = 'scale(1.5)';
+          cursorFollower.style.transform = 'scale(1.5)';
+        });
+        
+        el.addEventListener('mouseleave', () => {
+          cursor.style.transform = 'scale(1)';
+          cursorFollower.style.transform = 'scale(1)';
+        });
+      });
+    }
   </script>
-  </div>
-
-  </body>
+</body>
 </html>
