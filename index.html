@@ -622,11 +622,6 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
     
     let businessMode = false;
     
-    // Store original display values for all portfolio sections
-    const portfolioSections = [
-        'section.hero, section#about, section#work, section#contact'
-    ].join(', ');
-    
     businessToggle.addEventListener('click', () => {
         businessMode = !businessMode;
         
@@ -635,14 +630,13 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
             toggleSlider.style.transform = 'translateX(24px)';
             businessToggle.style.backgroundColor = '#2563eb';
             
-            // Hide all portfolio sections
-            document.querySelectorAll('section:not(#business-hero):not(#business-services):not(#business-contact)').forEach(el => {
-                if (!el.closest('#business-content')) { // Don't hide business sections
-                    el.style.display = 'none';
-                }
-            });
+            // Hide portfolio sections by ID
+            document.querySelector('#hero').style.display = 'none';
+            document.querySelector('#about').style.display = 'none';
+            document.querySelector('#work').style.display = 'none';
+            document.querySelector('#contact').style.display = 'none';
             
-            // Show business content - remove Tailwind's hidden class first
+            // Show business content
             businessContent.classList.remove('hidden');
             businessContent.style.display = 'block';
             
@@ -652,24 +646,30 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
             // Update URL for bookmarking
             history.pushState({ businessMode: true }, '', '#business');
             
+            console.log('Business mode ON - content should be visible');
+            
         } else {
             // Switch to Portfolio Mode
             toggleSlider.style.transform = 'translateX(0)';
             businessToggle.style.backgroundColor = '#d1d5db';
             
-            // Hide business content - add Tailwind's hidden class back
+            // Hide business content
             businessContent.classList.add('hidden');
             businessContent.style.display = 'none';
             
-            // Show all portfolio sections
-            document.querySelectorAll('section').forEach(el => {
-                if (!el.closest('#business-content')) { // Don't show business sections
-                    el.style.display = 'block';
-                }
-            });
+            // Show portfolio sections
+            document.querySelector('#hero').style.display = 'block';
+            document.querySelector('#about').style.display = 'block';
+            document.querySelector('#work').style.display = 'block';
+            document.querySelector('#contact').style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             
             // Update URL
             history.pushState({ businessMode: false }, '', '#');
+            
+            console.log('Portfolio mode ON');
         }
         
         // Ensure mobile menu is hidden when toggling
@@ -682,12 +682,10 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
     // Handle browser back/forward buttons
     window.addEventListener('popstate', (event) => {
         if (event.state && event.state.businessMode) {
-            // Force toggle to business mode
             if (!businessMode) {
                 businessToggle.click();
             }
         } else {
-            // Force toggle to portfolio mode
             if (businessMode) {
                 businessToggle.click();
             }
@@ -696,7 +694,6 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
     
     // Check URL on load
     if (window.location.hash === '#business') {
-        // Wait a moment for page to load, then toggle
         setTimeout(() => {
             if (!businessMode) {
                 businessToggle.click();
@@ -704,21 +701,17 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
         }, 100);
     }
     
-  // Mobile menu functionality - FIXED
+    // Mobile menu functionality
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     
     if (mobileMenuBtn && mobileMenu) {
         mobileMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event bubbling
-            
-            // Toggle the 'hidden' class
+            e.stopPropagation();
             mobileMenu.classList.toggle('hidden');
-            
             console.log('Menu toggled, hidden:', mobileMenu.classList.contains('hidden'));
         });
         
-        // Close mobile menu when clicking links
         const mobileLinks = mobileMenu.querySelectorAll('a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -726,7 +719,6 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
             });
         });
         
-        // Close mobile menu when clicking outside
         document.addEventListener('click', (event) => {
             if (!mobileMenu.contains(event.target) && 
                 !mobileMenuBtn.contains(event.target) && 
@@ -751,7 +743,6 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
             }, 100);
         });
         
-        // Hover effects
         document.querySelectorAll('a, button').forEach(el => {
             el.addEventListener('mouseenter', () => {
                 cursor.style.transform = 'scale(1.5)';
@@ -765,5 +756,6 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
         });
     }
 </script>
+   
    </body>
 </html>
