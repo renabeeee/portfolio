@@ -614,7 +614,7 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
   </section>
 </div>
 
-    <script>
+<script>
     // Toggle Business Mode
     const businessToggle = document.getElementById('business-toggle');
     const toggleSlider = document.getElementById('toggle-slider');
@@ -624,6 +624,8 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
     
     businessToggle.addEventListener('click', () => {
         businessMode = !businessMode;
+        
+        console.log('Toggle clicked, businessMode is now:', businessMode);
         
         if (businessMode) {
             // Switch to Business Mode
@@ -637,8 +639,10 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
             document.querySelector('#contact').style.display = 'none';
             
             // Show business content
+            console.log('Before showing business content:', businessContent.classList, businessContent.style.display);
             businessContent.classList.remove('hidden');
             businessContent.style.display = 'block';
+            console.log('After showing business content:', businessContent.classList, businessContent.style.display);
             
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
