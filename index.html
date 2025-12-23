@@ -74,11 +74,24 @@
     <div class="text- font-medium tracking-tight">
       <img src="./images/sg-logo.png" alt="Campus app" class="h-8 md:h-10 w-auto" />
     </div>
+     <!-- ADD THIS TOGGLE -->
+  <div class="flex items-center gap-4">
+    <!-- Business Toggle -->
+    <div class="hidden md:flex items-center mr-4">
+      <span class="text-xs text-gray-500 mr-2">Portfolio</span>
+      <button id="business-toggle" class="relative w-12 h-6 bg-gray-300 rounded-full transition duration-300 focus:outline-none">
+        <div id="toggle-slider" class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300"></div>
+      </button>
+      <span class="text-xs text-gray-500 ml-2">Business</span>
+    </div>
+
+    <!-- Existing nav links -->
     <div class="hidden md:flex space-x-8 text-sm">
       <a href="#work" class="hover:opacity-60 transition">Work</a>
       <a href="#about" class="hover:opacity-60 transition">About</a>
       <a href="#contact" class="hover:opacity-60 transition">Contact</a>
     </div>
+    
     <button id="mobile-menu-btn" class="md:hidden">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
