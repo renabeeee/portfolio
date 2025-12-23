@@ -709,16 +709,13 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
     const mobileMenu = document.getElementById('mobile-menu');
     
     if (mobileMenuBtn && mobileMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            
             // Toggle the 'hidden' class
             mobileMenu.classList.toggle('hidden');
             
-            // Also toggle display style to override any inline styles from our toggle
-            if (mobileMenu.classList.contains('hidden')) {
-                mobileMenu.style.display = 'none';
-            } else {
-                mobileMenu.style.display = 'block';
-            }
+            console.log('Menu toggled, hidden:', mobileMenu.classList.contains('hidden'));
         });
         
         // Close mobile menu when clicking links
@@ -726,7 +723,6 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
-                mobileMenu.style.display = 'none';
             });
         });
         
@@ -736,7 +732,6 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
                 !mobileMenuBtn.contains(event.target) && 
                 !mobileMenu.classList.contains('hidden')) {
                 mobileMenu.classList.add('hidden');
-                mobileMenu.style.display = 'none';
             }
         });
     }
