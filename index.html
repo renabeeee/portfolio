@@ -644,10 +644,19 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
     if (workSection) workSection.style.display = 'none';
     if (contactSection) contactSection.style.display = 'none';
     
-    // Show business content
-    console.log('Before showing business content:', businessContent.classList, businessContent.style.display);
-    businessContent.style.display = 'block';
-    console.log('After showing business content:', businessContent.classList, businessContent.style.display);
+console.log('Before showing business content:', businessContent.classList, businessContent.style.display);
+businessContent.style.display = 'block';
+businessContent.style.opacity = '1';
+businessContent.style.visibility = 'visible';
+
+// Make sure all business sections are visible
+const businessSections = businessContent.querySelectorAll('section');
+businessSections.forEach(section => {
+    section.style.display = 'block';
+});
+
+console.log('After showing business content:', businessContent.classList, businessContent.style.display);
+console.log('Business sections found:', businessSections.length);
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
