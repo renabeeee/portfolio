@@ -92,6 +92,7 @@ body > * {
   transition: opacity 0.3s ease;
 }
 
+
   </style>
 </head>
 
@@ -417,7 +418,7 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
 
   
 <!-- HIDDEN BUSINESS SECTIONS - NATURAL VERSION -->
-<div id="business-content" class="hidden">
+<div id="business-content" style="display: none;">
   
   <!-- Business Hero - Natural Version -->
   <section id="business-hero" class="min-h-screen flex items-center px-8 md:px-16 pt-20">
@@ -627,24 +628,27 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
         
         console.log('Toggle clicked, businessMode is now:', businessMode);
         
-        if (businessMode) {
-            // Switch to Business Mode
-            toggleSlider.style.transform = 'translateX(24px)';
-            businessToggle.style.backgroundColor = '#2563eb';
+       if (businessMode) {
+    // Switch to Business Mode
+    toggleSlider.style.transform = 'translateX(24px)';
+    businessToggle.style.backgroundColor = '#2563eb';
+    
+    // Hide portfolio sections by ID
+    const heroSection = document.querySelector('#hero');
+    const aboutSection = document.querySelector('#about');
+    const workSection = document.querySelector('#work');
+    const contactSection = document.querySelector('#contact');
+    
+    if (heroSection) heroSection.style.display = 'none';
+    if (aboutSection) aboutSection.style.display = 'none';
+    if (workSection) workSection.style.display = 'none';
+    if (contactSection) contactSection.style.display = 'none';
+    
+    // Show business content
+    console.log('Before showing business content:', businessContent.classList, businessContent.style.display);
+    businessContent.style.display = 'block';
+    console.log('After showing business content:', businessContent.classList, businessContent.style.display);
             
-            // Hide portfolio sections by ID
-            document.querySelector('#hero').style.display = 'none';
-            document.querySelector('#about').style.display = 'none';
-            document.querySelector('#work').style.display = 'none';
-            document.querySelector('#contact').style.display = 'none';
-            
-            // Show business content
-            console.log('Before showing business content:', businessContent.classList, businessContent.style.display);
-            businessContent.classList.remove('hidden');
-            businessContent.style.display = 'block';
-            console.log('After showing business content:', businessContent.classList, businessContent.style.display);
-            
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
             // Update URL for bookmarking
@@ -652,20 +656,23 @@ I’m building <strong>Campus</strong>, a community app for women basketball pla
             
             console.log('Business mode ON - content should be visible');
             
-        } else {
-            // Switch to Portfolio Mode
-            toggleSlider.style.transform = 'translateX(0)';
-            businessToggle.style.backgroundColor = '#d1d5db';
-            
-            // Hide business content
-            businessContent.classList.add('hidden');
-            businessContent.style.display = 'none';
-            
-            // Show portfolio sections
-            document.querySelector('#hero').style.display = 'block';
-            document.querySelector('#about').style.display = 'block';
-            document.querySelector('#work').style.display = 'block';
-            document.querySelector('#contact').style.display = 'block';
+       } else {
+    toggleSlider.style.transform = 'translateX(0)';
+    businessToggle.style.backgroundColor = '#d1d5db';
+    
+    // Hide business content
+    businessContent.style.display = 'none';
+    
+    // Show portfolio sections
+    const heroSection = document.querySelector('#hero');
+    const aboutSection = document.querySelector('#about');
+    const workSection = document.querySelector('#work');
+    const contactSection = document.querySelector('#contact');
+    
+    if (heroSection) heroSection.style.display = 'flex';
+    if (aboutSection) aboutSection.style.display = 'block';
+    if (workSection) workSection.style.display = 'block';
+    if (contactSection) contactSection.style.display = 'block';
             
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
